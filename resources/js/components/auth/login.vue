@@ -20,6 +20,7 @@
                       placeholder="Enter Email Address"
                       v-model="form.email"
                       >
+                     
                     </div>
                     <div class="form-group">
                       <input 
@@ -29,6 +30,7 @@
                       placeholder="Password"
                       v-model="form.password"
                       >
+                      
                     </div>
                     <div class="form-group">
                       <div class="custom-control custom-checkbox small" style="line-height: 1.5rem;">
@@ -68,14 +70,37 @@
       }
     }
   },
+  created(){
+    if (User.loggedIn()){
+      this.$router.push({name: 'home'})
+    }
+  },
   methods:{
+
     login(){
       axios.post('/api/auth/login', this.form)
-      .then(res =>User.responseAfterLoign(res))
-      .catch(error=>console.log(error.response.data)) 
+      .then(res =>{
+        User.responseAfterLoign(res)
+          Toast.fire({
+          icon: 'success',
+          title: 'Signed in Successfully'
+          })   
+        this.$router.push({name:'home'});
+    })
+      // .catch(error =>this.errors= error.response.data.errors)
+      .catch(error=>{
+        // console.log(error.response.data)
+         Toast.fire({
+          icon: 'warning',
+          title: 'Ops! Invalid Email or Password'
+          }) 
+        }) 
     }
+
   }
+
   }
+
 </script>
 
 <style></style>

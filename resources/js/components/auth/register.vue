@@ -10,23 +10,46 @@
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Register</h1>
                   </div>
-                  <form>
+                  <form class="user" @submit.prevent="signup">
                     <div class="form-group">
                     
-                      <input type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Full Name">
+                      <input 
+                      type="text" 
+                      class="form-control"
+                      id="exampleInputFirstName" 
+                      placeholder="Enter Full Name"
+                      v-model="form.name"
+                      >
                     </div>
                     
                     <div class="form-group">
                       
-                      <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp"
-                        placeholder="Enter Email Address">
+                      <input 
+                      type="email" 
+                      class="form-control" 
+                      id="exampleInputEmail"
+                      aria-describedby="emailHelp"
+                      placeholder="Enter Email Address"
+                      v-model="form.email"
+                      >
                     </div>
                     <div class="form-group">
-                      <input type="password" class="form-control" id="exampleInputPassword" placeholder="Enter Password">
+                      <input 
+                      type="password" 
+                      class="form-control" 
+                      id="exampleInputPassword" 
+                      placeholder="Enter Password"
+                      v-model="form.password"
+                      >
                     </div>
                     <div class="form-group">
-                      <input type="password" class="form-control" id="exampleInputPasswordRepeat"
-                        placeholder="Confirm Password">
+                      <input 
+                      type="password" 
+                      class="form-control" 
+                      id="exampleInputPasswordRepeat"
+                      placeholder="Confirm Password"
+                      v-model="form.password_confirmation"
+                      >
                     </div>
                     <div class="form-group">
                       <button type="submit" class="btn btn-primary btn-block">Register</button>
@@ -49,6 +72,48 @@
 	</div>
 </template>
 
-<script></script>
+<script>
+  export default{
+      data(){
+    return{
+      form:{
+        email:null,
+        name:null,
+        password:null,
+        password_confirmation:null
+      }
+    }
+  },
+  created(){
+    if (User.loggedIn()){
+      this.$router.push({name: 'home'})
+    }
+  },
+  methods:{
+    signup(){
+      axios.post('/api/auth/signup', this.form)
+      .then(res =>{
+        User.responseAfterLoign(res)
+          Toast.fire({
+          icon: 'success',
+          title: 'Registered Successfully'
+          })   
+        this.$router.push({name:'home'});
+    })
+      // .catch(error =>this.errors= error.response.data.errors)
+      .catch(error=>{
+        // console.log(error.response.data)
+         Toast.fire({
+          icon: 'warning',
+          title: 'Ops! Please Check Input Data Rule violation'
+          }) 
+        }) 
+    }
+
+  }
+
+  }
+
+</script>
 
 <style></style>
