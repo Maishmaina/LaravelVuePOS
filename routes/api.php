@@ -10,3 +10,6 @@ Route::group([
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
 });
+
+
+Route::apiResource('/employee','Api\EmployeeController');
